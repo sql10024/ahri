@@ -401,32 +401,93 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      padding: 18px;
+      padding: 20px;
       background: rgba(0, 0, 0, 0.68);
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
     }
 
-    .banner-popup {
-      width: min(92vw, 920px);
-      border-radius: 22px;
+    .banner-grid {
+      width: min(94vw, 1100px);
+      max-height: 92vh;
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      overflow-y: auto;
+      padding: 4px;
+    }
+
+    .banner-item {
+      position: relative;
       overflow: hidden;
-      cursor: pointer;
+      border-radius: 20px;
+      background: rgba(5, 10, 35, 0.72);
+      border: 1px solid rgba(170, 195, 255, 0.34);
       box-shadow:
-        0 0 40px rgba(120, 80, 255, 0.35),
-        0 0 80px rgba(40, 120, 255, 0.18),
-        0 22px 70px rgba(0, 0, 0, 0.45);
+        0 0 30px rgba(120, 80, 255, 0.30),
+        0 0 60px rgba(40, 120, 255, 0.14),
+        0 18px 54px rgba(0, 0, 0, 0.42);
       animation: bannerFade 0.25s ease;
     }
 
-    .banner-popup img {
+    .banner-item.hidden {
+      display: none;
+    }
+
+    .banner-control {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      right: 10px;
+      z-index: 2;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 8px;
+      pointer-events: none;
+    }
+
+    .banner-hide-today,
+    .banner-close {
+      pointer-events: auto;
+      border: 1px solid rgba(255, 255, 255, 0.38);
+      border-radius: 999px;
+      cursor: pointer;
+      color: #ffffff;
+      background: rgba(5, 10, 28, 0.72);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.28);
+      font-weight: 900;
+      transition: transform 0.2s ease, filter 0.2s ease;
+    }
+
+    .banner-hide-today {
+      padding: 7px 11px;
+      font-size: 12px;
+      letter-spacing: -0.2px;
+    }
+
+    .banner-close {
+      width: 30px;
+      height: 30px;
+      padding: 0;
+      font-size: 17px;
+      line-height: 1;
+    }
+
+    .banner-hide-today:hover,
+    .banner-close:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.12);
+    }
+
+    .banner-item img {
       display: block;
       width: 100%;
       height: auto;
-    }
-
-    .banner-popup.hidden {
-      display: none;
+      user-select: none;
+      -webkit-user-drag: none;
     }
 
     @keyframes bannerFade {
@@ -437,6 +498,30 @@
       to {
         opacity: 1;
         transform: scale(1);
+      }
+    }
+
+    @media (max-width: 760px) {
+      .banner-overlay {
+        align-items: flex-start;
+        padding: 14px;
+        overflow-y: auto;
+      }
+
+      .banner-grid {
+        grid-template-columns: 1fr;
+        width: min(96vw, 520px);
+        max-height: none;
+      }
+
+      .banner-hide-today {
+        font-size: 11px;
+        padding: 6px 10px;
+      }
+
+      .banner-close {
+        width: 28px;
+        height: 28px;
       }
     }
   </style>
@@ -482,17 +567,38 @@
 
 
   <div id="bannerOverlay" class="banner-overlay">
-    <div class="banner-popup" data-banner="1">
-      <img src="assets/banner1.png" alt="신규 첫충 40% 이벤트 배너" />
-    </div>
-    <div class="banner-popup hidden" data-banner="2">
-      <img src="assets/banner2.png" alt="신규회원 입금 플러스 배너" />
-    </div>
-    <div class="banner-popup hidden" data-banner="3">
-      <img src="assets/banner3.png" alt="통장협박 관련 경고 배너" />
-    </div>
-    <div class="banner-popup hidden" data-banner="4">
-      <img src="assets/banner4.png" alt="가입 승인 10만원 지급 배너" />
+    <div class="banner-grid">
+      <div class="banner-item" data-banner="1">
+        <div class="banner-control">
+          <button class="banner-hide-today" type="button">오늘 하루 보지 않음</button>
+          <button class="banner-close" type="button" aria-label="배너 닫기">×</button>
+        </div>
+        <img src="assets/banner1.png" alt="신규 첫충 40% 이벤트 배너" />
+      </div>
+
+      <div class="banner-item" data-banner="2">
+        <div class="banner-control">
+          <button class="banner-hide-today" type="button">오늘 하루 보지 않음</button>
+          <button class="banner-close" type="button" aria-label="배너 닫기">×</button>
+        </div>
+        <img src="assets/banner2.png" alt="신규회원 입금 플러스 배너" />
+      </div>
+
+      <div class="banner-item" data-banner="3">
+        <div class="banner-control">
+          <button class="banner-hide-today" type="button">오늘 하루 보지 않음</button>
+          <button class="banner-close" type="button" aria-label="배너 닫기">×</button>
+        </div>
+        <img src="assets/banner3.png" alt="통장협박 관련 경고 배너" />
+      </div>
+
+      <div class="banner-item" data-banner="4">
+        <div class="banner-control">
+          <button class="banner-hide-today" type="button">오늘 하루 보지 않음</button>
+          <button class="banner-close" type="button" aria-label="배너 닫기">×</button>
+        </div>
+        <img src="assets/banner4.png" alt="가입 승인 10만원 지급 배너" />
+      </div>
     </div>
   </div>
 
@@ -655,21 +761,74 @@
     updatePendingStatus();
 
     const bannerOverlay = document.getElementById("bannerOverlay");
-    const bannerPopups = document.querySelectorAll(".banner-popup");
-    let currentBanner = 0;
+    const bannerItems = document.querySelectorAll(".banner-item");
+    const BANNER_HIDE_PREFIX = "ahribet_banner_hide_until_";
 
-    bannerPopups.forEach((popup) => {
-      popup.addEventListener("click", () => {
-        popup.classList.add("hidden");
-        currentBanner += 1;
+    function getBannerHideKey(bannerId) {
+      return `${BANNER_HIDE_PREFIX}${bannerId}`;
+    }
 
-        if (currentBanner < bannerPopups.length) {
-          bannerPopups[currentBanner].classList.remove("hidden");
-        } else if (bannerOverlay) {
-          bannerOverlay.style.display = "none";
+    function updateBannerOverlay() {
+      if (!bannerOverlay) return;
+
+      const visibleBannerCount = Array.from(bannerItems)
+        .filter((item) => !item.classList.contains("hidden"))
+        .length;
+
+      if (visibleBannerCount === 0) {
+        bannerOverlay.style.display = "none";
+      }
+    }
+
+    function closeBannerItem(item) {
+      if (!item) return;
+      item.classList.add("hidden");
+      updateBannerOverlay();
+    }
+
+    function hideBannerForToday(item) {
+      if (!item) return;
+
+      const bannerId = item.dataset.banner;
+      const hideUntil = Date.now() + (24 * 60 * 60 * 1000);
+
+      localStorage.setItem(getBannerHideKey(bannerId), String(hideUntil));
+      closeBannerItem(item);
+    }
+
+    function initBannerGrid() {
+      bannerItems.forEach((item) => {
+        const bannerId = item.dataset.banner;
+        const savedUntil = Number(localStorage.getItem(getBannerHideKey(bannerId)) || "0");
+
+        if (savedUntil > Date.now()) {
+          item.classList.add("hidden");
+        } else if (savedUntil) {
+          localStorage.removeItem(getBannerHideKey(bannerId));
+        }
+
+        const hideTodayBtn = item.querySelector(".banner-hide-today");
+        const closeBtn = item.querySelector(".banner-close");
+
+        if (hideTodayBtn) {
+          hideTodayBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            hideBannerForToday(item);
+          });
+        }
+
+        if (closeBtn) {
+          closeBtn.addEventListener("click", (event) => {
+            event.stopPropagation();
+            closeBannerItem(item);
+          });
         }
       });
-    });
+
+      updateBannerOverlay();
+    }
+
+    initBannerGrid();
 
   </script>
 </body>
