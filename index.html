@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>아리벳</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800&family=Orbitron:wght@700;800&family=Noto+Serif+KR:wght@700;900&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; font-family: "Montserrat", sans-serif; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background: url("assets/sakura-bg.png") center center / cover no-repeat fixed;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 72% 34%, rgba(102, 45, 155, 0.18), transparent 36%),
+        radial-gradient(circle at 15% 82%, rgba(0, 84, 180, 0.22), transparent 42%),
+        linear-gradient(135deg,
+          rgba(5, 10, 38, 0.58) 0%,
+          rgba(27, 18, 70, 0.48) 42%,
+          rgba(9, 38, 98, 0.40) 100%
+        );
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(2, 4, 18, 0.28), transparent 38%, rgba(3, 5, 20, 0.18)),
+        radial-gradient(circle at center, transparent 40%, rgba(0, 0, 0, 0.28) 100%);
+    }
+
+    #loginWrap {
+      display: block;
+      position: relative;
+      z-index: 2;
+    }
+
+    .card {
+      width: min(460px, calc(100vw - 28px));
+      padding: 30px 32px 28px;
+      border-radius: 26px;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      background:
+        linear-gradient(180deg, rgba(8, 16, 48, 0.72), rgba(7, 9, 28, 0.56)),
+        radial-gradient(circle at 18% 10%, rgba(83, 154, 255, 0.22), transparent 34%),
+        radial-gradient(circle at 92% 0%, rgba(164, 87, 255, 0.20), transparent 36%);
+      backdrop-filter: blur(24px) saturate(190%);
+      -webkit-backdrop-filter: blur(24px) saturate(190%);
+      border: 1px solid rgba(157, 194, 255, 0.56);
+      box-shadow:
+        0 30px 88px rgba(0, 0, 0, 0.52),
+        0 0 0 1px rgba(255, 255, 255, 0.08) inset,
+        0 0 38px rgba(45, 126, 255, 0.30),
+        0 0 70px rgba(150, 75, 255, 0.16);
+      clip-path: polygon(0 18px, 18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(74, 166, 255, 0.95), rgba(168, 98, 255, 0.82), transparent);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border-radius: 20px;
+      border: 1px solid rgba(130, 170, 255, 0.22);
+      pointer-events: none;
+    }
+
+    .title {
+      margin-bottom: 26px;
+      cursor: pointer;
+      user-select: none;
+      position: relative;
+      min-height: 92px;
+      display: block;
+      text-align: center;
+      font-family: "Noto Serif KR", "Orbitron", "Montserrat", sans-serif;
+      font-size: 34px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+      color: #f4f7ff;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.95),
+        0 0 14px rgba(132, 198, 255, 0.78),
+        0 0 30px rgba(78, 135, 255, 0.58),
+        0 0 46px rgba(178, 111, 255, 0.42);
+      animation: glassTitleGlow 2.6s ease-in-out infinite;
+    }
+
+    .title span {
+      position: absolute;
+      left: 58%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      display: block;
+    }
+
+    .title-logo {
+      position: absolute;
+      left: -2px;
+      top: 50%;
+      width: 98px;
+      height: 98px;
+      transform: translateY(-50%);
+      object-fit: contain;
+      display: block;
+      filter:
+        drop-shadow(0 0 14px rgba(80, 176, 255, 0.92))
+        drop-shadow(0 0 26px rgba(145, 85, 255, 0.58));
+    }
+
+    @keyframes glassTitleGlow {
+      0%, 100% { opacity: 0.94; filter: drop-shadow(0 0 4px rgba(112, 170, 255, 0.38)); }
+      50% { opacity: 1; filter: drop-shadow(0 0 16px rgba(80, 150, 255, 0.70)); }
+    }
+
+    .input,
+    .modal-input {
+      width: 100%;
+      padding: 16px 18px 14px;
+      border: 0;
+      border-bottom: 2px solid rgba(90, 157, 255, 0.72);
+      border-radius: 0;
+      outline: none;
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffffff;
+      background:
+        linear-gradient(90deg, rgba(37, 70, 145, 0.22), rgba(18, 26, 72, 0.14)),
+        rgba(3, 8, 28, 0.28);
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 10px 22px rgba(0, 0, 0, 0.18);
+      text-shadow: 0 1px 8px rgba(0, 0, 0, 0.34);
+      transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease, transform 0.2s ease;
+    }
+
+    .input { margin-bottom: 15px; }
+
+    .input:focus,
+    .modal-input:focus {
+      border-bottom-color: rgba(213, 231, 255, 0.98);
+      background:
+        linear-gradient(90deg, rgba(57, 115, 255, 0.25), rgba(117, 79, 255, 0.18)),
+        rgba(4, 13, 40, 0.34);
+      box-shadow:
+        0 0 0 1px rgba(116, 170, 255, 0.18) inset,
+        0 0 26px rgba(76, 145, 255, 0.28),
+        0 12px 28px rgba(0, 0, 0, 0.26);
+      transform: translateY(-1px);
+    }
+
+    .input::placeholder,
+    .modal-input::placeholder { color: rgba(230, 238, 255, 0.68); }
+
+    .btn {
+      flex: 1;
+      padding: 14px 12px;
+      border: 1px solid rgba(177, 207, 255, 0.58);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 900;
+      color: #ffffff;
+      background:
+        linear-gradient(135deg, rgba(116, 58, 255, 0.98), rgba(28, 116, 255, 0.94));
+      box-shadow:
+        0 16px 34px rgba(37, 91, 255, 0.32),
+        0 0 28px rgba(98, 105, 255, 0.28),
+        inset 0 1px 0 rgba(255,255,255,0.38);
+      text-shadow: 0 1px 10px rgba(0, 0, 0, 0.42);
+      transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .signup-btn {
+      background: linear-gradient(135deg, rgba(30, 139, 255, 0.98), rgba(117, 76, 255, 0.92));
+    }
+
+    .auth-actions {
+      display: flex;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .btn:hover,
+    .modal-btn:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.10);
+    }
+
+    .login-btn { margin-bottom: 0; }
+    .signup-btn { margin-top: 0; }
+
+    .status-message {
+      min-height: 18px;
+      margin-top: 10px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .status-message.error { color: #ffe3e3; }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      z-index: 10;
+      background: rgba(1, 5, 22, 0.68);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .modal-overlay.show { display: flex; }
+
+    .modal-box {
+      width: min(390px, calc(100vw - 34px));
+      padding: 32px 28px 26px;
+      border-radius: 999px;
+      position: relative;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 14% 0%, rgba(94, 156, 255, 0.20), transparent 40%),
+        linear-gradient(145deg, rgba(255,255,255,0.13), rgba(25, 24, 73, 0.46)),
+        rgba(5, 9, 30, 0.42);
+      backdrop-filter: blur(22px) saturate(175%);
+      -webkit-backdrop-filter: blur(22px) saturate(175%);
+      border: 1px solid rgba(200,215,255,0.60);
+      box-shadow:
+        0 28px 76px rgba(0,0,0,0.50),
+        0 0 34px rgba(80,120,255,0.30),
+        inset 0 1px 0 rgba(255,255,255,0.34);
+    }
+
+    .modal-title {
+      margin: 0 0 18px;
+      text-align: center;
+      font-family: "Noto Serif KR", "Orbitron", "Montserrat", sans-serif;
+      font-size: 31px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      color: #f4f7ff;
+      text-shadow:
+        0 0 5px rgba(255,255,255,0.90),
+        0 0 15px rgba(132,198,255,0.70),
+        0 0 28px rgba(88,125,255,0.48),
+        0 0 40px rgba(178,111,255,0.32);
+    }
+
+    .error-text {
+      min-height: 18px;
+      margin: 0 0 12px;
+      font-size: 12px;
+      text-align: center;
+      color: #ffe3e3;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 12px 12px;
+      border: 1px solid rgba(198,211,255,0.58);
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 900;
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(102, 70, 255, 0.88), rgba(36, 116, 255, 0.76));
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.30), 0 10px 24px rgba(42,67,255,0.20);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.34);
+    }
+
+    .telegram-support-wrap {
+      margin-top: 18px;
+      width: 100%;
+    }
+
+    .telegram-support-card {
+      position: relative;
+      display: flex;
+      align-items: center;
+      width: 100%;
+      min-height: 86px;
+      padding: 10px 16px 10px 12px;
+      border-radius: 18px;
+      text-decoration: none;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 12% 50%, rgba(45, 178, 255, 0.36), transparent 34%),
+        linear-gradient(135deg, rgba(7, 18, 52, 0.94), rgba(17, 32, 82, 0.80));
+      border: 1px solid rgba(96, 180, 255, 0.78);
+      box-shadow:
+        0 0 28px rgba(42, 145, 255, 0.40),
+        0 14px 30px rgba(0, 0, 0, 0.28),
+        inset 0 1px 0 rgba(255, 255, 255, 0.20);
+      backdrop-filter: blur(13px) saturate(155%);
+      -webkit-backdrop-filter: blur(13px) saturate(155%);
+      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
+      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
+    }
+
+    .telegram-support-card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(77, 175, 255, 0.22), transparent 42%, rgba(104, 78, 255, 0.18));
+    }
+
+    .telegram-support-card:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.08);
+      box-shadow:
+        0 0 34px rgba(42, 145, 255, 0.52),
+        0 16px 34px rgba(0, 0, 0, 0.30),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24);
+    }
+
+    .telegram-character {
+      position: relative;
+      z-index: 1;
+      width: 82px;
+      height: 82px;
+      object-fit: contain;
+      flex-shrink: 0;
+      margin-right: 10px;
+      filter: drop-shadow(0 0 14px rgba(65, 170, 255, 0.74));
+    }
+
+    .telegram-support-title {
+      position: relative;
+      z-index: 1;
+      display: block;
+      font-size: 18px;
+      font-weight: 900;
+      line-height: 1;
+      color: #ffffff;
+      letter-spacing: -0.8px;
+      white-space: nowrap;
+      text-shadow:
+        0 0 12px rgba(88, 174, 255, 0.62),
+        0 2px 10px rgba(0, 0, 0, 0.30);
+    }
+
+    .telegram-arrow {
+      position: relative;
+      z-index: 1;
+      margin-left: auto;
+      font-size: 38px;
+      line-height: 1;
+      color: #8ed0ff;
+      text-shadow: 0 0 14px rgba(84, 180, 255, 0.70);
+    }
+
+    .banner-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 18px;
+      background: rgba(0, 0, 0, 0.68);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .banner-popup {
+      width: min(92vw, 920px);
+      border-radius: 22px;
+      overflow: hidden;
+      cursor: pointer;
+      box-shadow:
+        0 0 40px rgba(120, 80, 255, 0.35),
+        0 0 80px rgba(40, 120, 255, 0.18),
+        0 22px 70px rgba(0, 0, 0, 0.45);
+      animation: bannerFade 0.25s ease;
+    }
+
+    .banner-popup img {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+
+    .banner-popup.hidden {
+      display: none;
+    }
+
+    @keyframes bannerFade {
+      from {
+        opacity: 0;
+        transform: scale(0.96);
+      }
+      to {
+        opacity: 1;
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="loginWrap">
+
+  <div class="card">
+    <div class="title" onclick="window.location.reload()">
+      <img class="title-logo" src="assets/ahribet-logo.png" alt="아리벳 로고" />
+      <span>아리벳</span>
+    </div>
+    <input class="input" id="loginUserId" type="text" placeholder="ID" />
+    <input class="input" id="loginPassword" type="password" placeholder="password" />
+    <div class="auth-actions">
+      <button class="btn login-btn" id="loginBtn" type="button">로그인</button>
+      <button class="btn signup-btn" id="signupBtn" type="button">회원가입</button>
+    </div>
+    <div class="telegram-support-wrap">
+      <a class="telegram-support-card" href="https://t.me/ahribet2026" target="_blank" rel="noopener noreferrer">
+        <img class="telegram-character" src="assets/telegram-character.png" alt="텔레그램 고객센터" />
+        <span class="telegram-support-title">텔레그램 고객센터</span>
+        <span class="telegram-arrow">›</span>
+      </a>
+    </div>
+    <p class="status-message" id="loginStatusMessage"></p>
+  </div>
+
+  <div class="modal-overlay" id="codeModal">
+    <div class="modal-box">
+      <h2 class="modal-title">가입코드</h2>
+      <input class="modal-input" id="signupCodeInput" type="text" autocomplete="off" />
+      <p class="error-text" id="codeError"></p>
+      <div class="modal-actions">
+        <button class="modal-btn" id="cancelCodeBtn" type="button">취소</button>
+        <button class="modal-btn" id="confirmCodeBtn" type="button">확인</button>
+      </div>
+    </div>
+  </div>
+
+  </div>
+
+
+
+  <div id="bannerOverlay" class="banner-overlay">
+    <div class="banner-popup" data-banner="1">
+      <img src="assets/banner1.png" alt="신규 첫충 40% 이벤트 배너" />
+    </div>
+    <div class="banner-popup hidden" data-banner="2">
+      <img src="assets/banner2.png" alt="신규회원 입금 플러스 배너" />
+    </div>
+    <div class="banner-popup hidden" data-banner="3">
+      <img src="assets/banner3.png" alt="통장협박 관련 경고 배너" />
+    </div>
+    <div class="banner-popup hidden" data-banner="4">
+      <img src="assets/banner4.png" alt="가입 승인 10만원 지급 배너" />
+    </div>
+  </div>
+
+  <script>
+    const signupBtn = document.getElementById("signupBtn");
+    const codeModal = document.getElementById("codeModal");
+    const signupCodeInput = document.getElementById("signupCodeInput");
+    const confirmCodeBtn = document.getElementById("confirmCodeBtn");
+    const cancelCodeBtn = document.getElementById("cancelCodeBtn");
+    const codeError = document.getElementById("codeError");
+    const loginUserId = document.getElementById("loginUserId");
+    const loginPassword = document.getElementById("loginPassword");
+    const loginBtn = document.getElementById("loginBtn");
+    const loginStatusMessage = document.getElementById("loginStatusMessage");
+
+    const LOGIN_STATE_KEY = "shark_login_pending_state";
+    let statusTimer = null;
+
+    function openCodeModal() {
+      codeModal.classList.add("show");
+      codeError.textContent = "";
+      signupCodeInput.value = "";
+      window.setTimeout(() => signupCodeInput.focus(), 50);
+    }
+
+    function closeCodeModal() {
+      codeModal.classList.remove("show");
+      codeError.textContent = "";
+      signupCodeInput.value = "";
+    }
+
+    async function checkSignupCode() {
+      const enteredCode = signupCodeInput.value.trim();
+
+      if (!enteredCode) {
+        codeError.textContent = "코드를 입력해주세요.";
+        return;
+      }
+
+      try {
+        const response = await fetch("/api/verify-signup-code", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ code: enteredCode })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          codeError.textContent = result.message || "코드 확인에 실패했습니다.";
+          return;
+        }
+
+        window.location.href = "signup.html";
+      } catch (error) {
+        codeError.textContent = "서버 연결 중 오류가 발생했습니다.";
+      }
+    }
+
+    function setLoginStatus(text, isError = false) {
+      loginStatusMessage.textContent = text;
+      loginStatusMessage.className = isError ? "status-message error" : "status-message";
+    }
+
+    function updatePendingStatus() {
+      const raw = localStorage.getItem(LOGIN_STATE_KEY);
+
+      if (!raw) {
+        setLoginStatus("");
+        return;
+      }
+
+      try {
+        const data = JSON.parse(raw);
+        const startedAt = Number(data.startedAt || 0);
+
+        if (!startedAt) {
+          localStorage.removeItem(LOGIN_STATE_KEY);
+          setLoginStatus("");
+          return;
+        }
+
+        const elapsed = Date.now() - startedAt;
+        const rejectAfter = 10 * 60 * 1000;
+
+        if (elapsed >= rejectAfter) {
+          setLoginStatus("가입 거절 되었습니다 /블랙조회/");
+          return;
+        }
+
+        setLoginStatus("");
+
+        if (statusTimer) {
+          window.clearTimeout(statusTimer);
+        }
+
+        statusTimer = window.setTimeout(updatePendingStatus, rejectAfter - elapsed);
+      } catch (error) {
+        localStorage.removeItem(LOGIN_STATE_KEY);
+        setLoginStatus("");
+      }
+    }
+
+    async function handleLogin() {
+      const userId = loginUserId.value.trim();
+      const password = loginPassword.value;
+
+      if (!userId || !password) {
+        setLoginStatus("아이디와 비밀번호를 입력해주세요.", true);
+        return;
+      }
+
+      try {
+        loginBtn.disabled = true;
+        loginBtn.textContent = "확인 중...";
+
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          setLoginStatus(result.message || "로그인에 실패했습니다.", true);
+          return;
+        }
+
+        localStorage.setItem(LOGIN_STATE_KEY, JSON.stringify({
+          userId,
+          startedAt: Date.now()
+        }));
+
+        updatePendingStatus();
+      } catch (error) {
+        setLoginStatus("서버 연결 중 오류가 발생했습니다.", true);
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "로그인";
+      }
+    }
+
+    updatePendingStatus();
+
+    signupBtn.addEventListener("click", openCodeModal);
+    cancelCodeBtn.addEventListener("click", closeCodeModal);
+    confirmCodeBtn.addEventListener("click", checkSignupCode);
+    signupCodeInput.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") checkSignupCode();
+    });
+    codeModal.addEventListener("click", (event) => {
+      if (event.target === codeModal) closeCodeModal();
+    });
+    loginBtn.addEventListener("click", handleLogin);
+    loginPassword.addEventListener("keydown", (event) => {
+      if (event.key === "Enter") handleLogin();
+    });
+
+    updatePendingStatus();
+
+    const bannerOverlay = document.getElementById("bannerOverlay");
+    const bannerPopups = document.querySelectorAll(".banner-popup");
+    let currentBanner = 0;
+
+    bannerPopups.forEach((popup) => {
+      popup.addEventListener("click", () => {
+        popup.classList.add("hidden");
+        currentBanner += 1;
+
+        if (currentBanner < bannerPopups.length) {
+          bannerPopups[currentBanner].classList.remove("hidden");
+        } else if (bannerOverlay) {
+          bannerOverlay.style.display = "none";
+        }
+      });
+    });
+
+  </script>
+</body>
+</html>

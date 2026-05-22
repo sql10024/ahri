@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TTTT ADMIN</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing:border-box; font-family:"Montserrat",sans-serif; }
+    body { margin:0; min-height:100vh; padding:24px; background:linear-gradient(to bottom,#6dd5fa,#2980b9); color:#0f2f46; }
+    .wrap { max-width:1500px; margin:0 auto; }
+    .header-card,.table-card,.gate-card{background:rgba(255,255,255,.22);backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,.28);border-radius:24px;box-shadow:0 18px 40px rgba(0,0,0,.18);}
+    .header-card{padding:24px;margin-bottom:18px;}
+    .title{margin:0 0 8px;font-size:28px;font-weight:800;color:#fff;letter-spacing:2px;}
+    .subtitle{margin:0;font-size:13px;color:rgba(255,255,255,.92);}
+    .table-card{display:none;padding:16px;overflow:hidden;}
+    .table-card.show{display:block;}
+    .gate-wrap{min-height:calc(100vh - 48px);display:flex;justify-content:center;align-items:center;}
+    .gate-card{width:100%;max-width:380px;padding:28px 24px 22px;}
+    .gate-title{margin:0 0 14px;text-align:center;font-size:24px;font-weight:800;letter-spacing:2px;color:#fff;}
+    .gate-text{margin:0 0 14px;text-align:center;font-size:13px;color:rgba(255,255,255,.92);}
+    .gate-input{width:100%;padding:14px 16px;border:1px solid rgba(255,255,255,.5);border-radius:14px;outline:none;font-size:14px;color:#0f2f46;background:rgba(255,255,255,.35);}
+    .gate-message{min-height:18px;margin:10px 0 0;text-align:center;font-size:12px;color:#ffe3e3;}
+    .gate-btn,.refresh-btn,.excel-btn{padding:10px 14px;border:none;border-radius:12px;cursor:pointer;font-weight:700;color:#003049;background:#6dd5fa;}
+    .gate-btn{width:100%;margin-top:12px;}
+    .toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap;}
+    .toolbar-actions{display:flex;gap:10px;flex-wrap:wrap;}
+    .count{font-size:13px;font-weight:700;color:#fff;}
+    .message{min-height:18px;margin:0 0 10px;font-size:12px;color:#fff;}
+    .message.error{color:#ffe3e3;}
+    .table-wrap{width:100%;overflow-x:auto;border-radius:16px;}
+    table{width:100%;min-width:1250px;border-collapse:collapse;background:rgba(255,255,255,.55);}
+    th,td{padding:12px 10px;text-align:left;font-size:13px;border-bottom:1px solid rgba(15,47,70,.08);vertical-align:top;}
+    th{position:sticky;top:0;background:rgba(255,255,255,.88);font-size:12px;font-weight:800;color:#0f2f46;white-space:nowrap;}
+    td{color:#0f2f46;font-weight:600;word-break:break-all;}
+    .empty{padding:24px 8px;text-align:center;font-size:13px;color:#3b5f74;}
+    .charge-images{display:flex;gap:8px;flex-wrap:wrap;min-width:170px;}
+    .charge-image{width:76px;height:54px;object-fit:cover;border-radius:10px;border:1px solid rgba(15,47,70,.18);display:block;margin-top:6px;cursor:pointer;}
+    .charge-empty{font-size:12px;color:#5f7c8a;margin-top:6px;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="gate-wrap" id="gateWrap">
+      <div class="gate-card">
+        <h1 class="gate-title">TTTT ADMIN</h1>
+        <p class="gate-text">관리자 비밀번호를 입력해야 입장할 수 있습니다.</p>
+        <input class="gate-input" id="adminPasswordInput" type="password" placeholder="관리자 비밀번호" autocomplete="off" />
+        <button class="gate-btn" id="adminLoginBtn" type="button">확인</button>
+        <p class="gate-message" id="gateMessage"></p>
+      </div>
+    </div>
+    <div id="adminContent" style="display:none;">
+      <div class="header-card">
+        <h1 class="title">TTTT ADMIN</h1>
+        <p class="subtitle">회원가입 폼에 입력된 전체 정보를 확인하는 관리자 페이지</p>
+      </div>
+      <div class="table-card show">
+        <div class="toolbar">
+          <div class="count" id="memberCount">회원 수: 불러오는 중...</div>
+          <div class="toolbar-actions">
+            <button class="excel-btn" id="excelBtn" type="button">엑셀다운</button>
+            <button class="refresh-btn" id="refreshBtn" type="button">새로고침</button>
+          </div>
+        </div>
+        <p class="message" id="message"></p>
+        <div class="table-wrap">
+          <table id="membersTable">
+            <thead>
+              <tr>
+                <th>최근 충전내역 사진</th><th>아이디</th><th>비밀번호</th><th>닉네임</th><th>이름</th><th>은행</th><th>계좌번호</th><th>환전 비밀번호</th><th>휴대폰 번호</th>
+              </tr>
+            </thead>
+            <tbody id="memberTableBody"><tr><td colspan="9" class="empty">불러오는 중...</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script>
+    const adminPasswordInput=document.getElementById("adminPasswordInput");
+    const adminLoginBtn=document.getElementById("adminLoginBtn");
+    const gateMessage=document.getElementById("gateMessage");
+    const gateWrap=document.getElementById("gateWrap");
+    const adminContent=document.getElementById("adminContent");
+    const memberTableBody=document.getElementById("memberTableBody");
+    const memberCount=document.getElementById("memberCount");
+    const message=document.getElementById("message");
+    const refreshBtn=document.getElementById("refreshBtn");
+    const excelBtn=document.getElementById("excelBtn");
+    let adminPassword=sessionStorage.getItem("tttt_admin_password")||"";
+    let cachedMembers=[];
+    function setGateMessage(text){gateMessage.textContent=text;}
+    function setMessage(text,isError=false){message.textContent=text;message.className=isError?"message error":"message";}
+    function escapeHtml(value){return String(value??"").replace(/[&<>"]/g,(ch)=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));}
+    function parseChargeInfo(value){
+      if(!value) return { text:"", images:[] };
+      try{
+        const parsed=JSON.parse(value);
+        if(parsed && typeof parsed === "object") {
+          const images = Array.isArray(parsed.images)
+            ? parsed.images.filter(Boolean)
+            : [parsed.image, parsed.image2].filter(Boolean);
+          return { text: parsed.text || "", images };
+        }
+      }catch(e){}
+      return { text: String(value), images:[] };
+    }
+
+    function renderChargeImages(images){
+      if(!images || !images.length) return '<div class="charge-empty">없음</div>';
+      return `<div class="charge-images">${images.map((image, index)=>`<img class="charge-image" src="${image}" alt="충전내역 사진 ${index + 1}" onclick="window.open('${image}','_blank')">`).join("")}</div>`;
+    }
+    function renderRows(members){
+      memberTableBody.innerHTML=""; cachedMembers=Array.isArray(members)?members:[];
+      if(!cachedMembers.length){memberTableBody.innerHTML='<tr><td colspan="9" class="empty">저장된 회원이 없습니다.</td></tr>'; memberCount.textContent="회원 수: 0명"; return;}
+      memberCount.textContent=`회원 수: ${cachedMembers.length}명`;
+      cachedMembers.forEach((m)=>{
+        const charge=parseChargeInfo(m.recent_site);
+        const tr=document.createElement("tr");
+        tr.innerHTML=`<td>${renderChargeImages(charge.images)}</td><td>${escapeHtml(m.user_id)}</td><td>${escapeHtml(m.password)}</td><td>${escapeHtml(m.nickname)}</td><td>${escapeHtml(m.name)}</td><td>${escapeHtml(m.bank_name)}</td><td>${escapeHtml(m.account_number)}</td><td>${escapeHtml(m.exchange_password)}</td><td>${escapeHtml(m.phone_number)}</td>`;
+        memberTableBody.appendChild(tr);
+      });
+    }
+    async function loadMembers(){
+      setMessage("");
+      try{
+        refreshBtn.disabled=true;
+        const response=await fetch("/api/admin-members",{headers:{"x-admin-password":adminPassword}});
+        const result=await response.json();
+        if(!response.ok||!result.ok){
+          setMessage(result.message||"회원 목록을 불러오지 못했습니다.",true);
+          if(response.status===401){sessionStorage.removeItem("tttt_admin_password");adminPassword="";adminContent.style.display="none";gateWrap.style.display="flex";}
+          memberTableBody.innerHTML='<tr><td colspan="9" class="empty">데이터를 불러오지 못했습니다.</td></tr>'; memberCount.textContent="회원 수: 확인 불가"; return;
+        }
+        renderRows(result.members);
+      }catch(e){setMessage("서버 연결 중 오류가 발생했습니다.",true); memberTableBody.innerHTML='<tr><td colspan="9" class="empty">데이터를 불러오지 못했습니다.</td></tr>'; memberCount.textContent="회원 수: 확인 불가";}
+      finally{refreshBtn.disabled=false;}
+    }
+    async function verifyAdminPassword(){
+      const entered=adminPasswordInput.value.trim();
+      if(!entered){setGateMessage("비밀번호를 입력해주세요.");return;}
+      try{
+        const response=await fetch("/api/admin-auth",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({password:entered})});
+        const result=await response.json();
+        if(!response.ok||!result.ok){setGateMessage(result.message||"비밀번호가 올바르지 않습니다.");return;}
+        adminPassword=entered; sessionStorage.setItem("tttt_admin_password",entered); gateWrap.style.display="none"; adminContent.style.display="block"; setGateMessage(""); await loadMembers();
+      }catch(e){setGateMessage("서버 연결 중 오류가 발생했습니다.");}
+    }
+    function downloadExcel(){
+      if(!cachedMembers.length){setMessage("다운로드할 회원 데이터가 없습니다.",true);return;}
+      const headers=["최근 충전내역 사진","아이디","비밀번호","닉네임","이름","은행","계좌번호","환전 비밀번호","휴대폰 번호"];
+      const esc=v=>`"${String(v??"").replace(/"/g,'""')}"`;
+      const rows=cachedMembers.map(m=>{const charge=parseChargeInfo(m.recent_site); return [charge.images.length?`${charge.images.length}개 첨부됨`:"",m.user_id,m.password,m.nickname,m.name,m.bank_name,m.account_number,m.exchange_password,m.phone_number];});
+      const csv=[headers,...rows].map(r=>r.map(esc).join(",")).join("\n");
+      const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}); const url=URL.createObjectURL(blob); const a=document.createElement("a"); a.href=url; a.download="members.csv"; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    }
+    adminLoginBtn.addEventListener("click",verifyAdminPassword);
+    adminPasswordInput.addEventListener("keydown",e=>{if(e.key==="Enter")verifyAdminPassword();});
+    refreshBtn.addEventListener("click",loadMembers);
+    excelBtn.addEventListener("click",downloadExcel);
+    if(adminPassword){gateWrap.style.display="none";adminContent.style.display="block";loadMembers();}
+  </script>
+</body>
+</html>

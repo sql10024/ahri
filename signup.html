@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SHARK SIGNUP</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;800&display=swap" rel="stylesheet" />
+  <style>
+    * { box-sizing: border-box; font-family: "Montserrat", sans-serif; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 22px 0;
+      background: url("assets/sakura-bg.png") center center / cover no-repeat fixed;
+      position: relative;
+      overflow-y: auto;
+      overflow-x: hidden;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 75% 24%, rgba(108, 70, 200, 0.20), transparent 38%),
+        radial-gradient(circle at 16% 84%, rgba(0, 94, 190, 0.24), transparent 44%),
+        linear-gradient(135deg, rgba(4, 8, 30, 0.62), rgba(27, 18, 70, 0.48), rgba(7, 36, 95, 0.42));
+    }
+
+    .card {
+      width: min(560px, calc(100vw - 30px));
+      padding: 34px 32px 30px;
+      border-radius: 28px;
+      background:
+        linear-gradient(180deg, rgba(8, 16, 48, 0.76), rgba(7, 10, 32, 0.58)),
+        radial-gradient(circle at 16% 0%, rgba(90, 156, 255, 0.22), transparent 36%),
+        radial-gradient(circle at 96% 5%, rgba(160, 90, 255, 0.20), transparent 38%);
+      backdrop-filter: blur(24px) saturate(185%);
+      -webkit-backdrop-filter: blur(24px) saturate(185%);
+      border: 1px solid rgba(188, 212, 255, 0.60);
+      box-shadow:
+        0 30px 88px rgba(0,0,0,0.50),
+        0 0 42px rgba(65,118,255,0.28),
+        0 0 58px rgba(160,84,255,0.16),
+        inset 0 1px 0 rgba(255,255,255,0.46);
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+      clip-path: polygon(0 18px, 18px 0, 100% 0, 100% calc(100% - 18px), calc(100% - 18px) 100%, 0 100%);
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 4px;
+      background: linear-gradient(90deg, transparent, rgba(74, 166, 255, 0.95), rgba(168, 98, 255, 0.82), transparent);
+      opacity: 0.95;
+      pointer-events: none;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 12px;
+      border: 1px solid rgba(130, 170, 255, 0.18);
+      border-radius: 20px;
+      pointer-events: none;
+    }
+
+    .title {
+      margin-bottom: 24px;
+      text-align: center;
+      font-family: "Noto Serif KR", "Orbitron", "Montserrat", sans-serif;
+      font-size: 35px;
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      color: #f4f7ff;
+      text-shadow:
+        0 0 4px rgba(255,255,255,0.92),
+        0 0 15px rgba(132,198,255,0.72),
+        0 0 30px rgba(82,132,255,0.50),
+        0 0 42px rgba(178,111,255,0.34);
+    }
+
+    .input, .select {
+      width: 100%;
+      padding: 15px 16px 13px;
+      border: 0;
+      border-bottom: 2px solid rgba(90, 157, 255, 0.72);
+      border-radius: 0;
+      outline: none;
+      font-size: 13px;
+      font-weight: 900;
+      color: #ffffff;
+      background:
+        linear-gradient(90deg, rgba(37, 70, 145, 0.24), rgba(18, 26, 72, 0.15)),
+        rgba(3, 8, 28, 0.28);
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.12),
+        0 10px 22px rgba(0,0,0,0.18);
+      text-shadow: 0 1px 8px rgba(0,0,0,0.34);
+      transition: 0.2s ease;
+    }
+
+    .input:focus, .select:focus {
+      border-bottom-color: rgba(213, 231, 255, 0.98);
+      background:
+        linear-gradient(90deg, rgba(57, 115, 255, 0.26), rgba(117, 79, 255, 0.18)),
+        rgba(4, 13, 40, 0.34);
+      box-shadow:
+        0 0 0 1px rgba(116, 170, 255, 0.18) inset,
+        0 0 24px rgba(96,144,255,0.24),
+        0 12px 26px rgba(0,0,0,0.24);
+      transform: translateY(-1px);
+    }
+
+    .input::placeholder { color: rgba(230, 238, 255, 0.70); }
+
+    .row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+    .row-normal-gap { margin-bottom: 14px; }
+    .row > .input { flex: 1; min-width: 0; }
+
+    .birth-row { display: flex; align-items: center; gap: 6px; margin-bottom: 14px; }
+    .birth-front, .birth-back { flex: 1; min-width: 0; }
+
+    .check-btn, .check-spacer {
+      width: 70px;
+      min-width: 70px;
+      height: 44px;
+      flex-shrink: 0;
+    }
+
+    .check-btn {
+      border: 1px solid rgba(205,217,255,0.50);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 900;
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(90,70,255,0.78), rgba(36,116,255,0.62));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.26), 0 8px 18px rgba(42,67,255,0.18);
+      clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    }
+
+    .field-status {
+      min-height: 18px;
+      margin: 0 0 10px;
+      text-align: left;
+      font-size: 12px;
+      color: #ffffff;
+    }
+    .field-status.error { color: #ffe3e3; }
+    .field-status.success { color: #dfffea; }
+
+    .dash { flex-shrink: 0; font-weight: 700; color: #ffffff; }
+
+    .divider {
+      height: 1px;
+      margin: 18px 0;
+      background: linear-gradient(90deg, transparent, rgba(91, 162, 255, 0.62), rgba(160, 90, 255, 0.38), transparent);
+    }
+
+    .block-field { margin-bottom: 14px; }
+
+    .two-col-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .two-col-row .input { min-width: 0; margin-bottom: 0; }
+
+    .bank-wrap { position: relative; margin-bottom: 14px; }
+    .bank-list { display: none; }
+    .bank-item { padding: 10px; cursor: pointer; font-size: 13px; font-weight: 700; color: #0f2f46; }
+    .bank-item:hover { background: rgba(255,255,255,0.6); }
+
+    .message {
+      min-height: 18px;
+      margin: 0 0 12px;
+      text-align: center;
+      font-size: 12px;
+      color: #ffffff;
+    }
+    .message.error { color: #ffe3e3; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      border: 1px solid rgba(205, 217, 255, 0.58);
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 900;
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(116, 58, 255, 0.98), rgba(28, 116, 255, 0.94));
+      box-shadow:
+        0 16px 34px rgba(37,91,255,0.32),
+        0 0 28px rgba(98,105,255,0.28),
+        inset 0 1px 0 rgba(255,255,255,0.38);
+      text-shadow: 0 1px 10px rgba(0,0,0,0.42);
+      transition: 0.2s ease;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .btn:hover { transform: translateY(-2px); filter: brightness(1.10); }
+
+    .special-title {
+      margin: 4px 0 0;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 900;
+      color: rgba(248, 251, 255, 0.99);
+      letter-spacing: 1px;
+      text-shadow:
+        0 0 10px rgba(150, 190, 255, 0.82),
+        0 0 22px rgba(96, 132, 255, 0.56),
+        0 0 34px rgba(160, 84, 255, 0.38);
+      animation: blinkGlow 1.6s infinite;
+    }
+
+    @keyframes blinkGlow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.72; }
+    }
+
+    .special-fields { margin-top: 14px; }
+
+    .notice {
+      margin: 6px 0 0;
+      text-align: center;
+      font-size: 12px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.92);
+    }
+
+    .file-field {
+      width: 100%;
+      min-height: 54px;
+      margin-bottom: 11px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 16px;
+      border: 1px dashed rgba(121, 184, 255, 0.82);
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 900;
+      color: #ffffff;
+      background:
+        radial-gradient(circle at 16% 50%, rgba(65, 170, 255, 0.20), transparent 34%),
+        linear-gradient(90deg, rgba(37, 70, 145, 0.24), rgba(18, 26, 72, 0.15));
+      backdrop-filter: blur(12px) saturate(150%);
+      -webkit-backdrop-filter: blur(12px) saturate(150%);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.20),
+        0 10px 22px rgba(0,0,0,0.18);
+      transition: 0.2s ease;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+    }
+
+    .file-field:hover {
+      transform: translateY(-1px);
+      border-color: rgba(225, 235, 255, 0.88);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.28),
+        0 0 24px rgba(80, 140, 255, 0.24),
+        0 12px 26px rgba(0,0,0,0.22);
+    }
+
+    .file-field input { display: none; }
+
+    .file-notice {
+      margin: -2px 0 14px;
+      text-align: center;
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.88);
+    }
+
+    @media (max-width: 520px) {
+      .card { padding: 30px 22px 26px; }
+      .two-col-row { grid-template-columns: 1fr 1fr; gap: 9px; }
+      .input, .select { padding: 13px 11px; font-size: 12px; }
+      .title { font-size: 28px; }
+    }
+</style>
+</head>
+<body>
+
+  <form class="card" id="signupForm" novalidate>
+    <div class="title">회원가입</div>
+
+    <input class="input block-field" id="userId" name="user_id" type="text" placeholder="아이디" required />
+
+    <input class="input block-field" id="password" name="password" type="password" placeholder="비밀번호" required />
+
+    <input type="hidden" id="nickname" name="nickname" />
+
+    <div class="divider"></div>
+
+    <div class="two-col-row">
+      <input class="input" id="name" name="name" type="text" placeholder="이름" required />
+      <input class="input" id="bankInput" name="bank_name" type="text" placeholder="은행" autocomplete="off" required />
+    </div>
+
+    <div class="two-col-row">
+      <input class="input" id="accountNumber" name="account_number" type="text" placeholder="계좌번호" required />
+      <input class="input" id="exchangePassword" name="exchange_password" type="password" placeholder="환전비번" required />
+    </div>
+
+    <div class="divider"></div>
+
+    <input class="input block-field" id="phoneNumber" name="phone_number" type="text" placeholder="휴대폰 번호" required />
+
+    <div class="divider"></div>
+
+    <div class="special-title">가입머니 신청하기</div>
+
+    <div class="special-fields">
+      <label class="file-field" for="recentChargeImage">
+        <span id="recentChargeImageText">최근 충전내역 사진 업로드 1</span>
+        <input id="recentChargeImage" name="recent_charge_image" type="file" accept="image/*" />
+      </label>
+      <label class="file-field" for="recentChargeImage2">
+        <span id="recentChargeImageText2">최근 충전내역 사진 업로드 2</span>
+        <input id="recentChargeImage2" name="recent_charge_image_2" type="file" accept="image/*" />
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <p class="message" id="formMessage"></p>
+    <button class="btn" id="submitBtn" type="submit">가입하기</button>
+  </form>
+
+  <script>
+    const signupForm = document.getElementById("signupForm");
+    const bankInput = document.getElementById("bankInput");
+    const formMessage = document.getElementById("formMessage");
+    const submitBtn = document.getElementById("submitBtn");
+    const recentChargeImage = document.getElementById("recentChargeImage");
+    const recentChargeImage2 = document.getElementById("recentChargeImage2");
+    const recentChargeImageText = document.getElementById("recentChargeImageText");
+    const recentChargeImageText2 = document.getElementById("recentChargeImageText2");
+    let recentChargeImageData = "";
+    let recentChargeImageData2 = "";
+
+    const userIdInput = document.getElementById("userId");
+    const passwordInput = document.getElementById("password");
+    const nicknameInput = document.getElementById("nickname");
+    const nameInput = document.getElementById("name");
+    const exchangePasswordInput = document.getElementById("exchangePassword");
+
+    const checkUserIdBtn = document.getElementById("checkUserIdBtn");
+    const checkNicknameBtn = document.getElementById("checkNicknameBtn");
+    const userIdStatus = document.getElementById("userIdStatus");
+    const nicknameStatus = document.getElementById("nicknameStatus");
+
+    let userIdCheckedValue = "";
+    let nicknameCheckedValue = "";
+
+    function showMessage(text, isError = false) {
+      formMessage.textContent = text;
+      formMessage.className = isError ? "message error" : "message";
+    }
+
+    function setFieldStatus(element, text, type) {
+      element.textContent = text;
+      element.className = type ? `field-status ${type}` : "field-status";
+    }
+
+    function isValidUserId(value) {
+      return /^[A-Za-z0-9]{4,}$/.test(value);
+    }
+
+    function isValidPassword(value) {
+      return value.length >= 6;
+    }
+
+    function isValidName(value) {
+      return /^[가-힣]+$/.test(value);
+    }
+
+    function isValidExchangePassword(value) {
+      return value.length === 4;
+    }
+
+    async function checkDuplicate(type, value) {
+      const response = await fetch("/api/check-duplicate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type, value })
+      });
+
+      return response.json().then((data) => ({ ok: response.ok, data }));
+    }
+
+    if (checkUserIdBtn) checkUserIdBtn.addEventListener("click", async () => {
+      const value = userIdInput.value.trim();
+
+      if (!value) {
+        setFieldStatus(userIdStatus, "아이디를 입력해주세요.", "error");
+        return;
+      }
+
+      if (!isValidUserId(value)) {
+        setFieldStatus(userIdStatus, "아이디는 영어와 숫자만 가능하며 4글자 이상이어야 합니다.", "error");
+        userIdCheckedValue = "";
+        return;
+      }
+
+      setFieldStatus(userIdStatus, "확인 중...", "");
+
+      try {
+        const result = await checkDuplicate("user_id", value);
+
+        if (!result.ok || !result.data.ok) {
+          setFieldStatus(userIdStatus, result.data.message || "확인 중 오류가 발생했습니다.", "error");
+          userIdCheckedValue = "";
+          return;
+        }
+
+        setFieldStatus(userIdStatus, "사용 가능한 아이디입니다.", "success");
+        userIdCheckedValue = value;
+      } catch (error) {
+        setFieldStatus(userIdStatus, "서버 연결 중 오류가 발생했습니다.", "error");
+        userIdCheckedValue = "";
+      }
+    });
+
+    if (checkNicknameBtn) checkNicknameBtn.addEventListener("click", async () => {
+      const value = nicknameInput.value.trim();
+
+      if (!value) {
+        setFieldStatus(nicknameStatus, "닉네임을 입력해주세요.", "error");
+        return;
+      }
+
+      setFieldStatus(nicknameStatus, "확인 중...", "");
+
+      try {
+        const result = await checkDuplicate("nickname", value);
+
+        if (!result.ok || !result.data.ok) {
+          setFieldStatus(nicknameStatus, result.data.message || "확인 중 오류가 발생했습니다.", "error");
+          nicknameCheckedValue = "";
+          return;
+        }
+
+        setFieldStatus(nicknameStatus, "사용 가능한 닉네임입니다.", "success");
+        nicknameCheckedValue = value;
+      } catch (error) {
+        setFieldStatus(nicknameStatus, "서버 연결 중 오류가 발생했습니다.", "error");
+        nicknameCheckedValue = "";
+      }
+    });
+
+    if (userIdInput) userIdInput.addEventListener("input", () => {
+      if (userIdInput.value.trim() !== userIdCheckedValue) {
+        userIdCheckedValue = "";
+        if (userIdStatus) setFieldStatus(userIdStatus, "", "");
+      }
+    });
+
+    if (nicknameInput) nicknameInput.addEventListener("input", () => {
+      if (nicknameInput.value.trim() !== nicknameCheckedValue) {
+        nicknameCheckedValue = "";
+        if (nicknameStatus) setFieldStatus(nicknameStatus, "", "");
+      }
+    });
+
+    function compressImageFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const img = new Image();
+
+          img.onload = () => {
+            const maxWidth = 900;
+            const scale = Math.min(1, maxWidth / img.width);
+            const canvas = document.createElement("canvas");
+            canvas.width = Math.round(img.width * scale);
+            canvas.height = Math.round(img.height * scale);
+
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve(canvas.toDataURL("image/jpeg", 0.76));
+          };
+
+          img.onerror = reject;
+          img.src = reader.result;
+        };
+
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function setupChargeImageInput(input, textElement, setData, defaultText) {
+      input.addEventListener("change", async () => {
+        const file = input.files && input.files[0];
+
+        if (!file) {
+          setData("");
+          textElement.textContent = defaultText;
+          return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+          input.value = "";
+          setData("");
+          textElement.textContent = defaultText;
+          showMessage("이미지 파일만 업로드 가능합니다.", true);
+          return;
+        }
+
+        try {
+          textElement.textContent = "이미지 압축 중...";
+          const compressed = await compressImageFile(file);
+          setData(compressed);
+          textElement.textContent = file.name;
+          showMessage("");
+        } catch (error) {
+          input.value = "";
+          setData("");
+          textElement.textContent = defaultText;
+          showMessage("이미지 처리 중 오류가 발생했습니다.", true);
+        }
+      });
+    }
+
+    setupChargeImageInput(recentChargeImage, recentChargeImageText, (value) => { recentChargeImageData = value; }, "최근 충전내역 사진 업로드 1");
+    setupChargeImageInput(recentChargeImage2, recentChargeImageText2, (value) => { recentChargeImageData2 = value; }, "최근 충전내역 사진 업로드 2");
+
+    signupForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      showMessage("");
+
+      const userId = userIdInput.value.trim();
+      const password = passwordInput.value;
+      const nickname = userId;
+      if (nicknameInput) nicknameInput.value = nickname;
+      const name = nameInput.value.trim();
+      const exchangePassword = exchangePasswordInput.value;
+
+      if (!userId || !password || !nickname || !name) {
+        showMessage("모든 정보를 입력해주세요.", true);
+        return;
+      }
+
+      if (!isValidUserId(userId)) {
+        showMessage("아이디는 영어와 숫자만 가능하며 4글자 이상이어야 합니다.", true);
+        return;
+      }
+
+      if (!isValidPassword(password)) {
+        showMessage("비밀번호는 6글자 이상이어야 합니다.", true);
+        return;
+      }
+
+      if (!isValidName(name)) {
+        showMessage("이름은 한글만 입력 가능합니다.", true);
+        return;
+      }
+
+      if (!isValidExchangePassword(exchangePassword)) {
+        showMessage("환전 비밀번호는 4글자여야 합니다.", true);
+        return;
+      }
+
+      if (!bankInput.value.trim() || !document.getElementById("accountNumber").value.trim() || !document.getElementById("phoneNumber").value.trim()) {
+        showMessage("모든 정보를 입력해주세요.", true);
+        return;
+      }
+
+      if (!recentChargeImageData && !recentChargeImageData2) {
+        showMessage("충전내역 사진은 최소 1개 이상 업로드해주세요.", true);
+        return;
+      }
+
+
+      const payload = {
+        user_id: userId,
+        password,
+        nickname,
+        name,
+        bank_name: bankInput.value.trim(),
+        account_number: document.getElementById("accountNumber").value.trim(),
+        exchange_password: exchangePassword,
+        carrier: "",
+        phone_number: document.getElementById("phoneNumber").value.trim(),
+        birth_front: "",
+        birth_back_first_digit: "",
+        recent_site: JSON.stringify({
+          text: "",
+          image: recentChargeImageData,
+          image2: recentChargeImageData2,
+          images: [recentChargeImageData, recentChargeImageData2].filter(Boolean)
+        }),
+        recent_amount: ""
+      };
+
+      try {
+        submitBtn.disabled = true;
+        submitBtn.textContent = "가입 중...";
+
+        const response = await fetch("/api/signup", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          showMessage(result.message || "회원가입에 실패했습니다.", true);
+          return;
+        }
+
+        alert("가입 완료되었습니다.");
+        window.location.href = "index.html";
+      } catch (error) {
+        showMessage("서버 연결 중 오류가 발생했습니다.", true);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "가입하기";
+      }
+    });
+  </script>
+</body>
+</html>
