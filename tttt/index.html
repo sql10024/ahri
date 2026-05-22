@@ -130,6 +130,7 @@
 
     let adminPassword=sessionStorage.getItem("tttt_admin_password")||"";
     let cachedMembers=[];
+    let previewImages=[];
 
     function setGateMessage(text){gateMessage.textContent=text;}
     function setMessage(text,isError=false){message.textContent=text;message.className=isError?"message error":"message";}
@@ -180,19 +181,23 @@
       if(!images.length) return '<div class="charge-empty">없음</div>';
 
       return `<div class="charge-images">${
-        images.map((image,index)=>`
-          <img
-            class="charge-image"
-            src="${image}"
-            alt="최근 충전내역 사진 ${index+1}"
-            onclick="showImagePreview('${image}')"
-          >
-        `).join("")
+        images.map((image,index)=>{
+          const previewIndex=registerPreviewImage(image);
+          return `
+            <img
+              class="charge-image"
+              src="${image}"
+              alt="최근 충전내역 사진 ${index+1}"
+              onclick="showImagePreviewByIndex(${previewIndex})"
+            >
+          `;
+        }).join("")
       }</div>`;
     }
 
     function renderRows(members){
       memberTableBody.innerHTML="";
+      previewImages=[];
       cachedMembers=Array.isArray(members)?members:[];
 
       if(!cachedMembers.length){
@@ -357,7 +362,7 @@
 
 
   <div id="imagePreviewOverlay" class="image-preview-overlay" onclick="hideImagePreview()">
-    <img id="imagePreview" class="image-preview" alt="최근 충전내역 사진" />
+    <img id="imagePreview" class="image-preview" alt="최근 충전내역 사진" onclick="event.stopPropagation()" />
   </div>
 </body>
 </html>
