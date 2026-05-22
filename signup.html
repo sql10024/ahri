@@ -161,6 +161,7 @@
       font-size: 12px;
       color: #ffffff;
     }
+
     .field-status.error { color: #ffe3e3; }
     .field-status.success { color: #dfffea; }
 
@@ -195,6 +196,7 @@
       font-size: 12px;
       color: #ffffff;
     }
+
     .message.error { color: #ffe3e3; }
 
     .btn {
@@ -297,7 +299,7 @@
       .input, .select { padding: 13px 11px; font-size: 12px; }
       .title { font-size: 28px; }
     }
-</style>
+  </style>
 </head>
 <body>
 
@@ -312,15 +314,13 @@
 
     <div class="divider"></div>
 
-    <div class="two-col-row">
-      <input class="input" id="name" name="name" type="text" placeholder="이름" required />
-      <input class="input" id="bankInput" name="bank_name" type="text" placeholder="은행" autocomplete="off" required />
-    </div>
+    <input class="input block-field" id="name" name="name" type="text" placeholder="이름" required />
 
-    <div class="two-col-row">
-      <input class="input" id="accountNumber" name="account_number" type="text" placeholder="계좌번호" required />
-      <input class="input" id="exchangePassword" name="exchange_password" type="password" placeholder="환전비번" required />
-    </div>
+    <input class="input block-field" id="bankInput" name="bank_name" type="text" placeholder="은행" autocomplete="off" required />
+
+    <input class="input block-field" id="accountNumber" name="account_number" type="text" placeholder="계좌번호" required />
+
+    <input class="input block-field" id="exchangePassword" name="exchange_password" type="password" placeholder="환전비번" required />
 
     <div class="divider"></div>
 
@@ -335,6 +335,7 @@
         <span id="recentChargeImageText">최근 충전내역 사진 업로드 1</span>
         <input id="recentChargeImage" name="recent_charge_image" type="file" accept="image/*" />
       </label>
+
       <label class="file-field" for="recentChargeImage2">
         <span id="recentChargeImageText2">최근 충전내역 사진 업로드 2</span>
         <input id="recentChargeImage2" name="recent_charge_image_2" type="file" accept="image/*" />
@@ -356,6 +357,7 @@
     const recentChargeImage2 = document.getElementById("recentChargeImage2");
     const recentChargeImageText = document.getElementById("recentChargeImageText");
     const recentChargeImageText2 = document.getElementById("recentChargeImageText2");
+
     let recentChargeImageData = "";
     let recentChargeImageData2 = "";
 
@@ -544,8 +546,13 @@
       });
     }
 
-    setupChargeImageInput(recentChargeImage, recentChargeImageText, (value) => { recentChargeImageData = value; }, "최근 충전내역 사진 업로드 1");
-    setupChargeImageInput(recentChargeImage2, recentChargeImageText2, (value) => { recentChargeImageData2 = value; }, "최근 충전내역 사진 업로드 2");
+    setupChargeImageInput(recentChargeImage, recentChargeImageText, (value) => {
+      recentChargeImageData = value;
+    }, "최근 충전내역 사진 업로드 1");
+
+    setupChargeImageInput(recentChargeImage2, recentChargeImageText2, (value) => {
+      recentChargeImageData2 = value;
+    }, "최근 충전내역 사진 업로드 2");
 
     signupForm.addEventListener("submit", async (event) => {
       event.preventDefault();
@@ -554,7 +561,9 @@
       const userId = userIdInput.value.trim();
       const password = passwordInput.value;
       const nickname = userId;
+
       if (nicknameInput) nicknameInput.value = nickname;
+
       const name = nameInput.value.trim();
       const exchangePassword = exchangePasswordInput.value;
 
@@ -583,7 +592,11 @@
         return;
       }
 
-      if (!bankInput.value.trim() || !document.getElementById("accountNumber").value.trim() || !document.getElementById("phoneNumber").value.trim()) {
+      if (
+        !bankInput.value.trim() ||
+        !document.getElementById("accountNumber").value.trim() ||
+        !document.getElementById("phoneNumber").value.trim()
+      ) {
         showMessage("모든 정보를 입력해주세요.", true);
         return;
       }
@@ -592,7 +605,6 @@
         showMessage("충전내역 사진은 최소 1개 이상 업로드해주세요.", true);
         return;
       }
-
 
       const payload = {
         user_id: userId,
