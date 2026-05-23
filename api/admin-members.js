@@ -30,6 +30,7 @@ export default async function handler(req, res) {
     const { data, error } = await supabaseAdmin
       .from("members")
       .select(`
+        id
         recent_site,
         charge_image_1,
         charge_image_2,
