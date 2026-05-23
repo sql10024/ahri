@@ -515,6 +515,65 @@
         height: 28px;
       }
     }
+
+    /* Mobile-only background visibility adjustment: 기능 변경 없음 */
+    @media (max-width: 520px) {
+      body {
+        align-items: flex-start;
+        padding-top: 118px;
+      }
+
+      #loginWrap {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+      }
+
+      .card {
+        width: calc(100vw - 36px);
+        padding: 24px 22px 24px;
+        transform: translateY(22px);
+        background:
+          linear-gradient(180deg, rgba(8, 16, 48, 0.48), rgba(7, 9, 28, 0.34)),
+          radial-gradient(circle at 18% 10%, rgba(83, 154, 255, 0.16), transparent 34%),
+          radial-gradient(circle at 92% 0%, rgba(164, 87, 255, 0.14), transparent 36%);
+        backdrop-filter: blur(18px) saturate(165%);
+        -webkit-backdrop-filter: blur(18px) saturate(165%);
+      }
+
+      .title {
+        min-height: 68px;
+        font-size: 34px;
+        margin-bottom: 18px;
+      }
+
+      .input,
+      .modal-input {
+        padding: 14px 15px 12px;
+      }
+
+      .telegram-support-card {
+        min-height: 78px;
+        padding: 8px 14px 8px 10px;
+      }
+
+      .telegram-character {
+        width: 72px;
+        height: 72px;
+        margin-right: 8px;
+      }
+
+      .telegram-support-title {
+        font-size: 19px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+
+      .telegram-arrow {
+        font-size: 32px;
+      }
+    }
+
   </style>
 </head>
 <body>
