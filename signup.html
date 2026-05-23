@@ -316,7 +316,27 @@
 
     <input class="input block-field" id="name" name="name" type="text" placeholder="이름" required />
 
-    <input class="input block-field" id="bankInput" name="bank_name" type="text" placeholder="은행" autocomplete="off" required />
+    <select
+  class="input block-field"
+  id="bankInput"
+  name="bank_name"
+  required
+>
+  <option value="">은행 선택</option>
+
+  <option value="국민은행">국민은행</option>
+  <option value="신한은행">신한은행</option>
+  <option value="우리은행">우리은행</option>
+  <option value="하나은행">하나은행</option>
+  <option value="농협은행">농협은행</option>
+  <option value="기업은행">기업은행</option>
+  <option value="SC제일은행">SC제일은행</option>
+  <option value="씨티은행">씨티은행</option>
+  <option value="카카오뱅크">카카오뱅크</option>
+  <option value="케이뱅크">케이뱅크</option>
+  <option value="토스뱅크">토스뱅크</option>
+
+</select>
 
     <input class="input block-field" id="accountNumber" name="account_number" type="text" placeholder="계좌번호" required />
 
