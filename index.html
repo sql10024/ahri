@@ -53,21 +53,21 @@
     }
 
     .card {
-      width: min(460px, calc(100vw - 28px));
-      padding: 30px 32px 28px;
+      width: min(400px, calc(100vw - 34px));
+      padding: 28px 30px 24px;
       border-radius: 26px;
       position: relative;
       z-index: 2;
       overflow: hidden;
       background:
-        linear-gradient(180deg, rgba(8, 16, 48, 0.72), rgba(7, 9, 28, 0.56)),
-        radial-gradient(circle at 18% 10%, rgba(83, 154, 255, 0.22), transparent 34%),
-        radial-gradient(circle at 92% 0%, rgba(164, 87, 255, 0.20), transparent 36%);
-      backdrop-filter: blur(24px) saturate(190%);
-      -webkit-backdrop-filter: blur(24px) saturate(190%);
+        linear-gradient(180deg, rgba(8, 16, 48, 0.56), rgba(7, 9, 28, 0.40)),
+        radial-gradient(circle at 18% 10%, rgba(83, 154, 255, 0.17), transparent 34%),
+        radial-gradient(circle at 92% 0%, rgba(164, 87, 255, 0.15), transparent 36%);
+      backdrop-filter: blur(20px) saturate(175%);
+      -webkit-backdrop-filter: blur(20px) saturate(175%);
       border: 1px solid rgba(157, 194, 255, 0.56);
       box-shadow:
-        0 30px 88px rgba(0, 0, 0, 0.52),
+        0 26px 72px rgba(0, 0, 0, 0.44),
         0 0 0 1px rgba(255, 255, 255, 0.08) inset,
         0 0 38px rgba(45, 126, 255, 0.30),
         0 0 70px rgba(150, 75, 255, 0.16);
@@ -302,89 +302,6 @@
       text-shadow: 0 1px 8px rgba(0,0,0,0.34);
     }
 
-    .telegram-support-wrap {
-      margin-top: 18px;
-      width: 100%;
-    }
-
-    .telegram-support-card {
-      position: relative;
-      display: flex;
-      align-items: center;
-      width: 100%;
-      min-height: 86px;
-      padding: 10px 16px 10px 12px;
-      border-radius: 18px;
-      text-decoration: none;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 12% 50%, rgba(45, 178, 255, 0.36), transparent 34%),
-        linear-gradient(135deg, rgba(7, 18, 52, 0.94), rgba(17, 32, 82, 0.80));
-      border: 1px solid rgba(96, 180, 255, 0.78);
-      box-shadow:
-        0 0 28px rgba(42, 145, 255, 0.40),
-        0 14px 30px rgba(0, 0, 0, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.20);
-      backdrop-filter: blur(13px) saturate(155%);
-      -webkit-backdrop-filter: blur(13px) saturate(155%);
-      transition: transform 0.2s ease, filter 0.2s ease, box-shadow 0.2s ease;
-      clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 16px 100%, 0 calc(100% - 16px));
-    }
-
-    .telegram-support-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      background: linear-gradient(90deg, rgba(77, 175, 255, 0.22), transparent 42%, rgba(104, 78, 255, 0.18));
-    }
-
-    .telegram-support-card:hover {
-      transform: translateY(-2px);
-      filter: brightness(1.08);
-      box-shadow:
-        0 0 34px rgba(42, 145, 255, 0.52),
-        0 16px 34px rgba(0, 0, 0, 0.30),
-        inset 0 1px 0 rgba(255, 255, 255, 0.24);
-    }
-
-    .telegram-character {
-      position: relative;
-      z-index: 1;
-      width: 82px;
-      height: 82px;
-      object-fit: contain;
-      flex-shrink: 0;
-      margin-right: 10px;
-      filter: drop-shadow(0 0 14px rgba(65, 170, 255, 0.74));
-    }
-
-    .telegram-support-title {
-      position: relative;
-      z-index: 1;
-      display: block;
-      font-size: 21px;
-      font-weight: 900;
-      line-height: 1;
-      flex-shrink: 0;
-      color: #ffffff;
-      letter-spacing: -0.8px;
-      white-space: nowrap;
-      text-shadow:
-        0 0 12px rgba(88, 174, 255, 0.62),
-        0 2px 10px rgba(0, 0, 0, 0.30);
-    }
-
-    .telegram-arrow {
-      position: relative;
-      z-index: 1;
-      margin-left: auto;
-      font-size: 38px;
-      line-height: 1;
-      color: #8ed0ff;
-      text-shadow: 0 0 14px rgba(84, 180, 255, 0.70);
-    }
-
     .banner-overlay {
       position: fixed;
       inset: 0;
@@ -530,11 +447,11 @@
       }
 
       .card {
-        width: calc(100vw - 36px);
-        padding: 24px 22px 24px;
-        transform: translateY(22px);
+        width: calc(100vw - 58px);
+        padding: 24px 21px 22px;
+        transform: translateY(18px);
         background:
-          linear-gradient(180deg, rgba(8, 16, 48, 0.48), rgba(7, 9, 28, 0.34)),
+          linear-gradient(180deg, rgba(8, 16, 48, 0.42), rgba(7, 9, 28, 0.28)),
           radial-gradient(circle at 18% 10%, rgba(83, 154, 255, 0.16), transparent 34%),
           radial-gradient(circle at 92% 0%, rgba(164, 87, 255, 0.14), transparent 36%);
         backdrop-filter: blur(18px) saturate(165%);
@@ -552,26 +469,6 @@
         padding: 14px 15px 12px;
       }
 
-      .telegram-support-card {
-        min-height: 78px;
-        padding: 8px 14px 8px 10px;
-      }
-
-      .telegram-character {
-        width: 72px;
-        height: 72px;
-        margin-right: 8px;
-      }
-
-      .telegram-support-title {
-        font-size: 19px;
-        white-space: nowrap;
-        flex-shrink: 0;
-      }
-
-      .telegram-arrow {
-        font-size: 32px;
-      }
     }
 
   </style>
@@ -588,13 +485,6 @@
     <div class="auth-actions">
       <button class="btn login-btn" id="loginBtn" type="button">로그인</button>
       <button class="btn signup-btn" id="signupBtn" type="button">회원가입</button>
-    </div>
-    <div class="telegram-support-wrap">
-      <a class="telegram-support-card" href="https://t.me/ahribet2026" target="_blank" rel="noopener noreferrer">
-        <img class="telegram-character" src="assets/telegram-character.png" alt="텔레그램 고객센터" />
-        <span class="telegram-support-title">텔레그램 고객센터</span>
-        <span class="telegram-arrow">›</span>
-      </a>
     </div>
     <p class="status-message" id="loginStatusMessage"></p>
   </div>
