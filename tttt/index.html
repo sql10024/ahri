@@ -39,6 +39,22 @@
     .charge-empty{font-size:12px;color:#5f7c8a;margin-top:6px;}
 
 
+    .delete-btn{
+      padding:8px 10px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      font-weight:900;
+      color:#fff;
+      background:#ff3b5c;
+    }
+
+    .delete-btn:hover{
+      filter:brightness(1.08);
+      transform:translateY(-1px);
+    }
+
+
     .image-preview-overlay{
       position:fixed;
       inset:0;
@@ -105,10 +121,11 @@
                 <th>계좌번호</th>
                 <th>환전 비밀번호</th>
                 <th>휴대폰 번호</th>
+                <th>삭제</th>
               </tr>
             </thead>
             <tbody id="memberTableBody">
-              <tr><td colspan="9" class="empty">불러오는 중...</td></tr>
+              <tr><td colspan="10" class="empty">불러오는 중...</td></tr>
             </tbody>
           </table>
         </div>
@@ -201,7 +218,7 @@
       cachedMembers=Array.isArray(members)?members:[];
 
       if(!cachedMembers.length){
-        memberTableBody.innerHTML='<tr><td colspan="9" class="empty">저장된 회원이 없습니다.</td></tr>';
+        memberTableBody.innerHTML='<tr><td colspan="10" class="empty">저장된 회원이 없습니다.</td></tr>';
         memberCount.textContent="회원 수: 0명";
         return;
       }
@@ -220,6 +237,9 @@
           <td>${escapeHtml(m.account_number)}</td>
           <td>${escapeHtml(m.exchange_password)}</td>
           <td>${escapeHtml(m.phone_number)}</td>
+          <td>
+            <button class="delete-btn" onclick="deleteMember('${m.id}')">X</button>
+          </td>
         `;
         memberTableBody.appendChild(tr);
       });
@@ -247,7 +267,7 @@
             gateWrap.style.display="flex";
           }
 
-          memberTableBody.innerHTML='<tr><td colspan="9" class="empty">데이터를 불러오지 못했습니다.</td></tr>';
+          memberTableBody.innerHTML='<tr><td colspan="10" class="empty">데이터를 불러오지 못했습니다.</td></tr>';
           memberCount.textContent="회원 수: 확인 불가";
           return;
         }
@@ -256,7 +276,7 @@
 
       }catch(e){
         setMessage("서버 연결 중 오류가 발생했습니다.",true);
-        memberTableBody.innerHTML='<tr><td colspan="9" class="empty">데이터를 불러오지 못했습니다.</td></tr>';
+        memberTableBody.innerHTML='<tr><td colspan="10" class="empty">데이터를 불러오지 못했습니다.</td></tr>';
         memberCount.textContent="회원 수: 확인 불가";
       }finally{
         refreshBtn.disabled=false;
@@ -346,6 +366,37 @@
       a.click();
       a.remove();
       URL.revokeObjectURL(url);
+    }
+
+
+    async function deleteMember(id){
+      if(!id) return;
+
+      const confirmed = window.confirm("정말 이 회원 정보를 삭제하시겠습니까?");
+      if(!confirmed) return;
+
+      try{
+        const response = await fetch("/api/admin-delete-member",{
+          method:"POST",
+          headers:{
+            "Content-Type":"application/json",
+            "x-admin-password":adminPassword
+          },
+          body:JSON.stringify({id})
+        });
+
+        const result = await response.json();
+
+        if(!response.ok || !result.ok){
+          setMessage(result.message || "회원 삭제에 실패했습니다.", true);
+          return;
+        }
+
+        await loadMembers();
+
+      }catch(e){
+        setMessage("서버 연결 중 오류가 발생했습니다.", true);
+      }
     }
 
     adminLoginBtn.addEventListener("click",verifyAdminPassword);
