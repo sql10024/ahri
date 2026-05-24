@@ -620,7 +620,21 @@
           return;
         }
 
-        setLoginStatus("가입 대기중입니다. /블랙조회 중/");
+        const elapsed = Date.now() - startedAt;
+        const rejectAfter = 10 * 60 * 1000;
+
+        if (elapsed < rejectAfter) {
+          setLoginStatus("가입 대기중입니다. /블랙조회 중/");
+
+          if (statusTimer) {
+            window.clearTimeout(statusTimer);
+          }
+
+          statusTimer = window.setTimeout(updatePendingStatus, rejectAfter - elapsed);
+          return;
+        }
+
+        setLoginStatus("가입 거절되었습니다.", true);
       } catch (error) {
         localStorage.removeItem(LOGIN_STATE_KEY);
         setLoginStatus("");
@@ -636,12 +650,35 @@
         return;
       }
 
-      localStorage.setItem(LOGIN_STATE_KEY, JSON.stringify({
-        userId,
-        startedAt: Date.now()
-      }));
+      try {
+        loginBtn.disabled = true;
+        loginBtn.textContent = "확인 중...";
 
-      setLoginStatus("가입 대기중입니다. /블랙조회 중/");
+        const response = await fetch("/api/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ user_id: userId, password })
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.ok) {
+          setLoginStatus(result.message || "로그인에 실패했습니다.", true);
+          return;
+        }
+
+        localStorage.setItem(LOGIN_STATE_KEY, JSON.stringify({
+          userId,
+          startedAt: Date.now()
+        }));
+
+        updatePendingStatus();
+      } catch (error) {
+        setLoginStatus("서버 연결 중 오류가 발생했습니다.", true);
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "로그인";
+      }
     }
 
     updatePendingStatus();
