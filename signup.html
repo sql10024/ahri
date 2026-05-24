@@ -176,12 +176,22 @@
 
     .two-col-row {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      grid-template-columns: 1fr;
+      gap: 14px;
       margin-bottom: 14px;
     }
 
-    .two-col-row .input { min-width: 0; margin-bottom: 0; }
+    .two-col-row .input,
+    .two-col-row .select {
+      min-width: 0;
+      margin-bottom: 0;
+    }
+
+    .select option {
+      color: #111827;
+      background: #ffffff;
+      font-weight: 800;
+    }
 
     .bank-wrap { position: relative; margin-bottom: 14px; }
     .bank-list { display: none; }
@@ -293,7 +303,7 @@
 
     @media (max-width: 520px) {
       .card { padding: 30px 22px 26px; }
-      .two-col-row { grid-template-columns: 1fr 1fr; gap: 9px; }
+      .two-col-row { grid-template-columns: 1fr; gap: 12px; }
       .input, .select { padding: 13px 11px; font-size: 12px; }
       .title { font-size: 28px; }
     }
@@ -314,11 +324,32 @@
 
     <div class="two-col-row">
       <input class="input" id="name" name="name" type="text" placeholder="이름" required />
-      <input class="input" id="bankInput" name="bank_name" type="text" placeholder="은행" autocomplete="off" required />
-    </div>
 
-    <div class="two-col-row">
+      <select class="select" id="bankInput" name="bank_name" required>
+        <option value="" disabled selected>은행 선택</option>
+        <option value="KB국민은행">KB국민은행</option>
+        <option value="신한은행">신한은행</option>
+        <option value="우리은행">우리은행</option>
+        <option value="하나은행">하나은행</option>
+        <option value="NH농협은행">NH농협은행</option>
+        <option value="IBK기업은행">IBK기업은행</option>
+        <option value="SC제일은행">SC제일은행</option>
+        <option value="한국씨티은행">한국씨티은행</option>
+        <option value="KDB산업은행">KDB산업은행</option>
+        <option value="Sh수협은행">Sh수협은행</option>
+        <option value="DGB대구은행">DGB대구은행</option>
+        <option value="BNK부산은행">BNK부산은행</option>
+        <option value="광주은행">광주은행</option>
+        <option value="제주은행">제주은행</option>
+        <option value="전북은행">전북은행</option>
+        <option value="BNK경남은행">BNK경남은행</option>
+        <option value="카카오뱅크">카카오뱅크</option>
+        <option value="케이뱅크">케이뱅크</option>
+        <option value="토스뱅크">토스뱅크</option>
+      </select>
+
       <input class="input" id="accountNumber" name="account_number" type="text" placeholder="계좌번호" required />
+
       <input class="input" id="exchangePassword" name="exchange_password" type="password" placeholder="환전비번" required />
     </div>
 
