@@ -193,27 +193,26 @@
       image.src="";
     }
 
-    function renderChargeImages(member){
-      const images=[
-        normalizeImageSrc(member.charge_image_1),
-        normalizeImageSrc(member.charge_image_2)
-      ].filter(Boolean);
+function renderChargeImages(member){
+  const images=[
+    normalizeImageSrc(member.charge_image_1),
+    normalizeImageSrc(member.charge_image_2)
+  ].filter(Boolean);
 
-      if(!images.length) return '<div class="charge-empty">없음</div>';
+  if(!images.length) return '<div class="charge-empty">없음</div>';
 
-      return `<div class="charge-images">${
-        images.map((image,index)=>`
-<a
-  class="charge-image-link"
-  href="${image}"
-  target="_blank"
-  rel="noopener noreferrer"
->
-  사진보기 ${index+1}
-</a>
-        `).join("")
-      }</div>`;
-    }
+  return `<div class="charge-images">${
+    images.map((image,index)=>`
+      <button
+        type="button"
+        class="charge-image-link"
+        onclick="showImagePreview('${image}')"
+      >
+        사진보기 ${index+1}
+      </button>
+    `).join("")
+  }</div>`;
+}
 
     function renderRows(members){
       memberTableBody.innerHTML="";
