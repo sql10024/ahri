@@ -46,8 +46,7 @@ export default async function handler(req, res) {
         birth_front,
         birth_back_first_digit
       `)
-      .order("id", { ascending: false })
-      .limit(50);
+      .order("id", { ascending: false });
 
     if (error) {
       return res.status(500).json({
