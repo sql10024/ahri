@@ -203,12 +203,14 @@
 
       return `<div class="charge-images">${
         images.map((image,index)=>`
-          <img
-            class="charge-image"
-            src="${image}"
-            alt="최근 충전내역 사진 ${index+1}"
-            onclick="showImagePreviewFromImg(this)"
-          >
+<a
+  class="charge-image-link"
+  href="${image}"
+  target="_blank"
+  rel="noopener noreferrer"
+>
+  사진보기 ${index+1}
+</a>
         `).join("")
       }</div>`;
     }
