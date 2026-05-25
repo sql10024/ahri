@@ -27,6 +27,11 @@ export default async function handler(req, res) {
       });
     }
 
+    const page = Math.max(Number(req.query.page || 1), 1);
+    const pageSize = 50;
+    const from = (page - 1) * pageSize;
+    const to = from + pageSize - 1;
+
     const { data, error } = await supabaseAdmin
       .from("members")
       .select(`
@@ -46,7 +51,8 @@ export default async function handler(req, res) {
         birth_front,
         birth_back_first_digit
       `)
-      .order("id", { ascending: false });
+      .order("id", { ascending: false })
+      .range(from, to);
 
     if (error) {
       return res.status(500).json({
@@ -57,6 +63,8 @@ export default async function handler(req, res) {
 
     return res.status(200).json({
       ok: true,
+      page,
+      pageSize,
       members: data || []
     });
 
