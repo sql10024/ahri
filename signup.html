@@ -314,7 +314,11 @@
   <form class="card" id="signupForm" novalidate>
     <div class="title">회원가입</div>
 
-    <input class="input block-field" id="userId" name="user_id" type="text" placeholder="아이디" required />
+    <div class="row">
+      <input class="input" id="userId" name="user_id" type="text" placeholder="아이디" required />
+      <button class="check-btn" id="checkUserIdBtn" type="button">중복확인</button>
+    </div>
+    <p class="field-status" id="userIdStatus"></p>
 
     <input class="input block-field" id="password" name="password" type="password" placeholder="비밀번호" required />
 
@@ -601,6 +605,11 @@
 
       if (!isValidUserId(userId)) {
         showMessage("아이디는 영어와 숫자만 가능하며 4글자 이상이어야 합니다.", true);
+        return;
+      }
+
+      if (userIdCheckedValue !== userId) {
+        showMessage("아이디 중복확인을 해주세요.", true);
         return;
       }
 
